@@ -10,4 +10,4 @@ then
    sudo nerdctl build -f "$(dirname "$0")/cli.dockerfile" -t kajapp-php-cli "$(dirname "$0")"
 fi
 
-sudo nerdctl run --rm -it -v "$(dirname "$(realpath "./$(dirname "$0")")")":/home/app -w /home/app kajapp-php-cli "$@"
+sudo nerdctl run --rm -it -v "$(dirname "$(realpath "./$(dirname "$0")")")":/home/app/kajapp -w /home/app/kajapp kajapp-php-cli "$@"
