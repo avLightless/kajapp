@@ -9,5 +9,5 @@ RUN apt install -y wget zip
 # get composer
 RUN wget -O /usr/local/bin/composer https://getcomposer.org/download/latest-stable/composer.phar && chmod +x /usr/local/bin/composer
 RUN groupadd app && useradd -m -g app app
-# user "app" user
+# use "app" user
 USER app
