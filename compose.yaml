@@ -36,12 +36,17 @@ services:
     volumes:
       - ./api:/var/www
     environment:
-      APP_ENV: production
+      APP_ENV: dev
+      DATABASE_URL: "postgresql://root@database:26257/defaultdb?sslmode=disable&charset=utf8"
     networks:
       - default
 
   database:
     image: cockroachdb/cockroach:v21.1.18
+    ulimits:
+      nofile:
+        soft: 1956
+        hard: 2000
     command:
       - "start-single-node"
       - "--insecure"
