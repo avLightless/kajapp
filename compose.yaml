@@ -1,0 +1,52 @@
+version: "3.9"
+services:
+  proxy:
+    image: traefik:v2.6
+    ports:
+      - "80:80"
+    networks:
+      - default
+    environment:
+      - TZ=Europe/Budapest
+    volumes:
+      - ./proxy/traefik.yaml:/traefik/config.yaml
+    command:
+      - --providers.file.directory=/traefik/
+      - --accesslog=true
+      - --accesslog.format=json
+      - --accesslog.bufferingsize=100
+      - --accesslog.filters.statuscodes=399-560
+      - --accesslog.fields.defaultmode=keep
+      - --accesslog.fields.headers.names.Authorization=drop
+      - --log.format=json
+      - --log.level=WARNING
+      - --entrypoints.web.address=:80
+      - --ping=true
+      - --ping.entryPoint=web
+      - --metrics.prometheus=true
+      - --metrics.prometheus.addEntryPointsLabels=true
+      - --metrics.prometheus.addServicesLabels=true
+      - --metrics.prometheus.entryPoint=web
+
+  php-api:
+    image: kajapp-php-api
+    build:
+      context: api
+      dockerfile: Dockerfile
+    volumes:
+      - ./api:/var/www
+    environment:
+      APP_ENV: production
+    networks:
+      - default
+
+  database:
+    image: cockroachdb/cockroach:v21.1.18
+    command:
+      - "start-single-node"
+      - "--insecure"
+    ports:
+      - "26257:26257"
+      - "8080:8080"
+    networks:
+      - default

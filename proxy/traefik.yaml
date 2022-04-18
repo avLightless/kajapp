@@ -1,0 +1,16 @@
+http:
+  # Add the router
+  routers:
+    router0:
+      entryPoints:
+        - web
+      service: service-api
+      rule: Host(`api.127-0-0-1.sslip.io`)
+
+  # Add the service
+  services:
+    service-api:
+      loadBalancer:
+        servers:
+          - url: http://php-api/
+        passHostHeader: true
