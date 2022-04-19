@@ -1,16 +1,20 @@
 #! /usr/bin/env bash
 
-shopt -s expand_aliases # resolve aliases, does not work with sudo
-alias nerdctl='sudo nerdctl' # fix for expand_aliases
+filename=$0
 
-if [ -x "$(command -v docker)" ] && ! [ -x "$(command -v nerdctl)" ]
-then
-  alias nerdctl='sudo docker'
+# sets hack folder if script is called by itself, otherwise the parent script needs to set hack folder
+if [ -z "$hackFolder" ]; then
+    hackFolder="$(realpath "$(dirname "$filename")")"
 fi
 
-if [ -z "$(nerdctl images -q kajapp-php-cli)" ]
+# import container cli alias
+. "$hackFolder"/utils/container-alias.sh
+
+# build image if it doesn't exist
+if [ -z "$(containerCli images -q kajapp-php-cli)" ]
 then
-  nerdctl build -f "$(dirname "$0")/php-cli.dockerfile" -t kajapp-php-cli "$(dirname "$0")"
+  containerCli build -f "$(dirname "$0")/php-cli.dockerfile" -t kajapp-php-cli "$(dirname "$0")"
 fi
 
-nerdctl run --rm -it -v "$(dirname "$(realpath "./$(dirname "$0")")")/api":/home/app/kajapp -w /home/app/kajapp kajapp-php-cli "$@"
+# run image
+containerCli run --rm -it -v "$(dirname "$hackFolder")/api":/home/app/kajapp -w /home/app/kajapp kajapp-php-cli "$@"
