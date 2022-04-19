@@ -8,7 +8,9 @@ globalHelp() {
     echo -e "\t $filename -h                                            Show this help message"
     echo -e "\t $filename php-cli [-h | <command args>]                 Call the php-cli with optional arguments"
     echo -e "\t $filename up [-h | <command args>]                      Call compose-up with optional arguments"
-    echo -e "\t $filename up [-h]                                       Call compose-down"
+    echo -e "\t $filename build [-h | <command args>]                   Yep, its here!"
+    echo -e "\t $filename down [-h]                                     Call compose-down"
+    echo -e "\t $filename exec [-h | <command args>]                    Call exec on the container defined in args"
 }
 
 phpCliHelp() {
@@ -28,6 +30,11 @@ downHelp() {
 
 buildHelp() {
     echo "Command \"build\" usage:"
+    echo -e "\tlorem ipsum"
+}
+
+execHelp() {
+    echo "Command \"exec\" usage:"
     echo -e "\tlorem ipsum"
 }
 
@@ -54,6 +61,11 @@ buildPhpCliAction() {
 buildComposeAction() {
     echo "Command parameters passed to \"build compose\": $1"
     "$hackFolder"/build-compose.sh $1
+}
+
+execAction() {
+    echo "Command parameters passed to \exec\": $1"
+    "$hackFolder"/container-exec.sh $1
 }
 
 if [ ! 0 == $# ]; then
@@ -155,6 +167,19 @@ if [ ! 0 == $# ]; then
                     exit 1
                     ;;
             esac
+            ;;
+        exec)
+            unset OPTIND
+            while getopts ":h" option; do
+                case $option in
+                    h)
+                        execHelp
+                        exit 0
+                        ;;
+                    ?) ;;
+                esac
+            done
+            execAction "$*"
             ;;
         *)
             if [ -n "$command" ]; then

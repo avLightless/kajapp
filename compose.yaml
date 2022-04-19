@@ -30,6 +30,7 @@ services:
 
   php-api:
     image: kajapp-php-api
+    container_name: "kajapp-php-api"
     build:
       context: api
       dockerfile: Dockerfile
@@ -43,6 +44,7 @@ services:
 
   database:
     image: cockroachdb/cockroach:v21.1.18
+    container_name: "kajapp-database"
     ulimits:
       nofile:
         soft: 1956
