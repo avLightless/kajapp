@@ -26,19 +26,34 @@ downHelp() {
     echo -e "\tlorem ipsum"
 }
 
+buildHelp() {
+    echo "Command \"build\" usage:"
+    echo -e "\tlorem ipsum"
+}
+
 phpCliAction() {
-    echo "command parameters passed to \"php-cli\": $1"
-    . "$hackFolder"/php-cli.sh
+    echo "Command parameters passed to \"php-cli\": $1"
+    "$hackFolder"/php-cli.sh $1
 }
 
 upAction() {
-    echo "command parameters passed to \"up\": $1"
-    #TODO: call compose up
+    echo "Command parameters passed to \"up\": $1"
+    "$hackFolder"/compose-up.sh $1
 }
 
 downAction() {
-    echo "down function called"
-    #TODO: call compose down
+    echo "Down function called"
+    "$hackFolder"/compose-down.sh
+}
+
+buildPhpCliAction() {
+    echo "Command parameters passed to \"build php-cli\": $1"
+    "$hackFolder"/build-php-cli.sh $1
+}
+
+buildComposeAction() {
+    echo "Command parameters passed to \"build compose\": $1"
+    "$hackFolder"/build-compose.sh $1
 }
 
 if [ ! 0 == $# ]; then
@@ -99,13 +114,47 @@ if [ ! 0 == $# ]; then
                         ;;
                     ?)
                         echo "Invalid option: ${OPTARG}"
-                        echo "This command does not accept options"
+                        echo "This command only accepts the -h option"
                         downHelp
                         exit 1
                         ;;
                 esac
             done
             downAction
+            ;;
+        build)
+            unset OPTIND
+            while getopts ":h" option; do
+                case $option in
+                    h)
+                        buildHelp
+                        exit 0
+                        ;;
+                    ?)
+                        echo "Invalid option: ${OPTARG}"
+                        echo "This command only accepts the -h option"
+                        buildHelp
+                        exit 1
+                        ;;
+                esac
+            done
+            subcommand=$1
+            shift
+            case "$subcommand" in
+                php-cli)
+                    buildPhpCliAction "$*"
+                    ;;
+                compose)
+                    buildComposeAction "$*"
+                    ;;
+                *)
+                    if [ -n "$subcommand" ]; then
+                        echo "Invalid subcommand: $subcommand"
+                    fi
+                    buildHelp
+                    exit 1
+                    ;;
+            esac
             ;;
         *)
             if [ -n "$command" ]; then
