@@ -38,22 +38,18 @@ services:
       - ./api:/var/www
     environment:
       APP_ENV: dev
-      DATABASE_URL: "postgresql://root@database:26257/defaultdb?sslmode=disable&charset=utf8"
+      DATABASE_URL: "postgresql://admin:SuperSecret99@database:5432/postgres?charset=utf8"
+      JWT_PASSPHRASE: "randomSecureText"
     networks:
       - default
 
   database:
-    image: cockroachdb/cockroach:v21.1.18
+    image: postgres:13.6-alpine3.15
     container_name: "kajapp-database"
-    ulimits:
-      nofile:
-        soft: 1956
-        hard: 2000
-    command:
-      - "start-single-node"
-      - "--insecure"
     ports:
-      - "26257:26257"
-      - "8080:8080"
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: "admin"
+      POSTGRES_PASSWORD: "SuperSecret99"
     networks:
       - default
