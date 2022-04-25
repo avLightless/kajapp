@@ -11,6 +11,8 @@ globalHelp() {
     echo -e "\t $filename build [-h | <command args>]                   Yep, its here!"
     echo -e "\t $filename down [-h]                                     Call compose-down"
     echo -e "\t $filename exec [-h | <command args>]                    Call exec on the container defined in args"
+    echo -e "\t $filename migrate                                       Run database migrations"
+    echo -e "\t $filename pass-gen                                      Generate password hash"
 }
 
 phpCliHelp() {
@@ -35,6 +37,16 @@ buildHelp() {
 
 execHelp() {
     echo "Command \"exec\" usage:"
+    echo -e "\tlorem ipsum"
+}
+
+migrateHelp() {
+    echo "Command \"migrate\" usage:"
+    echo -e "\tlorem ipsum"
+}
+
+passGenHelp() {
+    echo "Command \"migrate\" usage:"
     echo -e "\tlorem ipsum"
 }
 
@@ -66,6 +78,16 @@ buildComposeAction() {
 execAction() {
     echo "Command parameters passed to \exec\": $1"
     "$hackFolder"/container-exec.sh $1
+}
+
+migrateAction() {
+    echo "Running database migrations..."
+    "$hackFolder"/container-exec.sh kajapp-php-api bin/console doctrine:migrations:migrate --no-interaction -vv
+}
+
+passGenAction() {
+    echo "Hashing password: $1"
+    "$hackFolder"/container-exec.sh kajapp-php-api bin/console security:hash-password --empty-salt --no-interaction "$1" "App\Entity\User"
 }
 
 if [ ! 0 == $# ]; then
@@ -180,6 +202,32 @@ if [ ! 0 == $# ]; then
                 esac
             done
             execAction "$*"
+            ;;
+        migrate)
+            unset OPTIND
+            while getopts ":h" option; do
+                case $option in
+                    h)
+                        migrateHelp
+                        exit 0
+                        ;;
+                    ?) ;;
+                esac
+            done
+            migrateAction
+            ;;
+        pass-gen)
+            unset OPTIND
+            while getopts ":h" option; do
+                case $option in
+                    h)
+                        passGenHelp
+                        exit 0
+                        ;;
+                    ?) ;;
+                esac
+            done
+            passGenAction "$*"
             ;;
         *)
             if [ -n "$command" ]; then
