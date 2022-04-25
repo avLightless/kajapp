@@ -21,9 +21,16 @@ class Household
     #[ORM\OneToMany(mappedBy: 'household', targetEntity: User::class)]
     private ArrayCollection $users;
 
+    #[ORM\Column(type: 'string', length: 32, nullable: true)]
+    private string $referral;
+
+    #[ORM\OneToMany(mappedBy: 'household', targetEntity: Inventory::class, orphanRemoval: true)]
+    private ArrayCollection $inventories;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
+        $this->inventories = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -55,6 +62,48 @@ class Household
             // set the owning side to null (unless already changed)
             if ($user->getHousehold() === $this) {
                 $user->setHousehold(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getReferral(): ?string
+    {
+        return $this->referral;
+    }
+
+    public function setReferral(?string $referral): self
+    {
+        $this->referral = $referral;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Inventory>
+     */
+    public function getInventories(): Collection
+    {
+        return $this->inventories;
+    }
+
+    public function addInventory(Inventory $inventory): self
+    {
+        if (!$this->inventories->contains($inventory)) {
+            $this->inventories[] = $inventory;
+            $inventory->setHousehold($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInventory(Inventory $inventory): self
+    {
+        if ($this->inventories->removeElement($inventory)) {
+            // set the owning side to null (unless already changed)
+            if ($inventory->getHousehold() === $this) {
+                $inventory->setHousehold(null);
             }
         }
 

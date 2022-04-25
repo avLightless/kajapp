@@ -4,32 +4,32 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
-use App\Entity\Household;
+use App\Entity\Product;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Household>
+ * @extends ServiceEntityRepository<Product>
  *
- * @method Household|null find($id, $lockMode = null, $lockVersion = null)
- * @method Household|null findOneBy(array $criteria, array $orderBy = null)
- * @method Household[]    findAll()
- * @method Household[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Product|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Product|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Product[]    findAll()
+ * @method Product[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class HouseholdRepository extends ServiceEntityRepository
+class ProductRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Household::class);
+        parent::__construct($registry, Product::class);
     }
 
     /**
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function add(Household $entity, bool $flush = true): void
+    public function add(Product $entity, bool $flush = true): void
     {
         $this->_em->persist($entity);
         if ($flush) {
@@ -41,7 +41,7 @@ class HouseholdRepository extends ServiceEntityRepository
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function remove(Household $entity, bool $flush = true): void
+    public function remove(Product $entity, bool $flush = true): void
     {
         $this->_em->remove($entity);
         if ($flush) {
@@ -50,15 +50,15 @@ class HouseholdRepository extends ServiceEntityRepository
     }
 
     // /**
-    //  * @return Household[] Returns an array of Household objects
+    //  * @return Product[] Returns an array of Product objects
     //  */
     /*
     public function findByExampleField($value)
     {
-        return $this->createQueryBuilder('h')
-            ->andWhere('h.exampleField = :val')
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.exampleField = :val')
             ->setParameter('val', $value)
-            ->orderBy('h.id', 'ASC')
+            ->orderBy('p.id', 'ASC')
             ->setMaxResults(10)
             ->getQuery()
             ->getResult()
@@ -67,10 +67,10 @@ class HouseholdRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?Household
+    public function findOneBySomeField($value): ?Product
     {
-        return $this->createQueryBuilder('h')
-            ->andWhere('h.exampleField = :val')
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.exampleField = :val')
             ->setParameter('val', $value)
             ->getQuery()
             ->getOneOrNullResult()

@@ -4,32 +4,32 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
-use App\Entity\Household;
+use App\Entity\Image;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Household>
+ * @extends ServiceEntityRepository<Image>
  *
- * @method Household|null find($id, $lockMode = null, $lockVersion = null)
- * @method Household|null findOneBy(array $criteria, array $orderBy = null)
- * @method Household[]    findAll()
- * @method Household[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Image|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Image|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Image[]    findAll()
+ * @method Image[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class HouseholdRepository extends ServiceEntityRepository
+class ImageRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Household::class);
+        parent::__construct($registry, Image::class);
     }
 
     /**
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function add(Household $entity, bool $flush = true): void
+    public function add(Image $entity, bool $flush = true): void
     {
         $this->_em->persist($entity);
         if ($flush) {
@@ -41,7 +41,7 @@ class HouseholdRepository extends ServiceEntityRepository
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function remove(Household $entity, bool $flush = true): void
+    public function remove(Image $entity, bool $flush = true): void
     {
         $this->_em->remove($entity);
         if ($flush) {
@@ -50,15 +50,15 @@ class HouseholdRepository extends ServiceEntityRepository
     }
 
     // /**
-    //  * @return Household[] Returns an array of Household objects
+    //  * @return Image[] Returns an array of Image objects
     //  */
     /*
     public function findByExampleField($value)
     {
-        return $this->createQueryBuilder('h')
-            ->andWhere('h.exampleField = :val')
+        return $this->createQueryBuilder('i')
+            ->andWhere('i.exampleField = :val')
             ->setParameter('val', $value)
-            ->orderBy('h.id', 'ASC')
+            ->orderBy('i.id', 'ASC')
             ->setMaxResults(10)
             ->getQuery()
             ->getResult()
@@ -67,10 +67,10 @@ class HouseholdRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?Household
+    public function findOneBySomeField($value): ?Image
     {
-        return $this->createQueryBuilder('h')
-            ->andWhere('h.exampleField = :val')
+        return $this->createQueryBuilder('i')
+            ->andWhere('i.exampleField = :val')
             ->setParameter('val', $value)
             ->getQuery()
             ->getOneOrNullResult()
