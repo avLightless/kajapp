@@ -27,10 +27,14 @@ class Household
     #[ORM\OneToMany(mappedBy: 'household', targetEntity: Inventory::class, orphanRemoval: true)]
     private ArrayCollection $inventories;
 
+    #[ORM\OneToMany(mappedBy: 'household', targetEntity: Product::class, orphanRemoval: true)]
+    private $products;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
         $this->inventories = new ArrayCollection();
+        $this->products = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -104,6 +108,36 @@ class Household
             // set the owning side to null (unless already changed)
             if ($inventory->getHousehold() === $this) {
                 $inventory->setHousehold(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Product>
+     */
+    public function getProducts(): Collection
+    {
+        return $this->products;
+    }
+
+    public function addProduct(Product $product): self
+    {
+        if (!$this->products->contains($product)) {
+            $this->products[] = $product;
+            $product->setHousehold($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProduct(Product $product): self
+    {
+        if ($this->products->removeElement($product)) {
+            // set the owning side to null (unless already changed)
+            if ($product->getHousehold() === $this) {
+                $product->setHousehold(null);
             }
         }
 
