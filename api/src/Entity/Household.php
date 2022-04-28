@@ -22,13 +22,13 @@ class Household
     private ArrayCollection $users;
 
     #[ORM\Column(type: 'string', length: 32, nullable: true)]
-    private string $referral;
+    private ?string $referral;
 
     #[ORM\OneToMany(mappedBy: 'household', targetEntity: Inventory::class, orphanRemoval: true)]
     private ArrayCollection $inventories;
 
     #[ORM\OneToMany(mappedBy: 'household', targetEntity: Product::class, orphanRemoval: true)]
-    private $products;
+    private ArrayCollection $products;
 
     public function __construct()
     {

@@ -5,40 +5,32 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\Product;
-use App\Entity\User;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ProductController extends AbstractController
 {
-    private User $user;
-    private ProductRepository $productRepository;
-
-    public function __construct(Security $security, ProductRepository $productRepository)
+    public function __construct(private ProductRepository $productRepository)
     {
-        $this->user = $security->getUser();
-        $this->productRepository = $productRepository;
     }
 
     #[Route('/product', name: 'all_product', methods: ['GET'])]
     public function index(): Response
     {
-        return $this->json($this->productRepository->findBy(['household' => $this->user->getHousehold()]));
+        return $this->json($this->productRepository->findBy(['household' => $this->getUser()->getHousehold()]));
     }
 
     #[Route('/product/{id<\d+>}', name: 'one_product', methods: ['GET'])]
-    public function getOne(int $id): Response
+    public function get(int $id): Response
     {
-        $product = $this->productRepository->findOneBy(['household' => $this->user->getHousehold(), 'id' => $id]);
+        $product = $this->productRepository->findOneBy(['household' => $this->getUser()->getHousehold(), 'id' => $id]);
 
         if (is_null($product) === true) {
             throw new NotFoundHttpException();
@@ -54,7 +46,7 @@ class ProductController extends AbstractController
 
         $product = (new Product())
             ->setName($requestBody['name'] ?? '')
-            ->setHousehold($this->user->getHousehold())
+            ->setHousehold($this->getUser()->getHousehold())
             ->setDescription($requestBody['description'] ?? '')
             ->setImage(null)
             ->setType($requestBody['type'] ?? '');
@@ -87,7 +79,7 @@ class ProductController extends AbstractController
     {
         $requestBody = json_decode($request->getContent(), true);
 
-        $product = $this->productRepository->findOneBy(['household' => $this->user->getHousehold(), 'id' => $id]);
+        $product = $this->productRepository->findOneBy(['household' => $this->getUser()->getHousehold(), 'id' => $id]);
 
         if (is_null($product) === true) {
             throw new NotFoundHttpException();
@@ -123,7 +115,7 @@ class ProductController extends AbstractController
     #[Route('/product/{id<\d+>}', name: 'delete_product', methods: ['DELETE'])]
     public function delete(int $id): Response
     {
-        $product = $this->productRepository->findOneBy(['household' => $this->user->getHousehold(), 'id' => $id]);
+        $product = $this->productRepository->findOneBy(['household' => $this->getUser()->getHousehold(), 'id' => $id]);
 
         if (is_null($product) === true) {
             throw new NotFoundHttpException();

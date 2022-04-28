@@ -41,31 +41,31 @@ class Inventory
         return $this->id;
     }
 
-    public function getProduct(): ?Product
+    public function getProduct(): Product
     {
         return $this->product;
     }
 
-    public function setProduct(?Product $product): self
+    public function setProduct(Product $product): self
     {
         $this->product = $product;
 
         return $this;
     }
 
-    public function getHousehold(): ?Household
+    public function getHousehold(): Household
     {
         return $this->household;
     }
 
-    public function setHousehold(?Household $household): self
+    public function setHousehold(Household $household): self
     {
         $this->household = $household;
 
         return $this;
     }
 
-    public function getStock(): ?float
+    public function getStock(): float
     {
         return $this->stock;
     }
@@ -77,7 +77,7 @@ class Inventory
         return $this;
     }
 
-    public function getUnit(): ?string
+    public function getUnit(): string
     {
         return $this->unit;
     }
@@ -101,7 +101,7 @@ class Inventory
         return $this;
     }
 
-    public function getFreezer(): ?bool
+    public function getFreezer(): bool
     {
         return $this->freezer;
     }
