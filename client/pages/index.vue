@@ -1,4 +1,6 @@
 <template>
-  <h1>Index Page</h1>
-  <NuxtLink to="/test">To Test Page</NuxtLink>
+  <div>
+    <h1>Index Page</h1>
+    <NuxtLink to="/login">To Login Page</NuxtLink>
+  </div>
 </template>
