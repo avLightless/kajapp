@@ -43,6 +43,29 @@ services:
     networks:
       - default
 
+  client:
+    image: kajapp-client
+    container_name: "kajapp-client"
+    build:
+      context: client
+      dockerfile: Dockerfile
+    volumes:
+      - ./client/.output/public:/srv
+    networks:
+      - default
+
+  client-builder:
+    image: kajapp-client-builder
+    container_name: "kajapp-client-builder"
+    user: 1000:1000
+    build:
+      context: hack
+      dockerfile: npm-builder.dockerfile
+    volumes:
+      - ./client:/app
+    command:
+      - find . -type f -not -path "*/.nuxt/*" -not -path "*/node_modules/*" -not -path "*/.output/*" -print | entr npm run generate --loglevel error
+
   database:
     image: postgres:13.6-alpine3.15
     container_name: "kajapp-database"
