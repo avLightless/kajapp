@@ -12,7 +12,7 @@
 }
 
 :80 {
-	root * /srv
+	root * /srv/public
 	try_files {path} /index.html
 	file_server
 }

@@ -6,4 +6,4 @@ RUN npm run generate
 
 FROM caddy:2.5.0-alpine
 COPY Caddyfile /etc/caddy/Caddyfile
-COPY --from=build /app/.output/public /srv
+COPY --from=build /app/.output /srv

@@ -50,7 +50,7 @@ services:
       context: client
       dockerfile: Dockerfile
     volumes:
-      - ./client/.output/public:/srv
+      - ./client/.output:/srv
     networks:
       - default
 
